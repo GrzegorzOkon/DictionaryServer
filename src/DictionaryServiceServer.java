@@ -10,7 +10,7 @@ public class DictionaryServiceServer extends Thread {
     
     private ServerSocket gniazdoSerwera;  
     private final int PORT = 1300;
-    private final ArrayList<Client> pod³¹czeniKlienci = new ArrayList<>();	
+    private final ArrayList<DictionaryServiceServerClient> pod³¹czeniKlienci = new ArrayList<>();	
     private final HashMap<String, Integer> pod³¹czoneSerweryS³ownikowe = new HashMap<>();
         
     public DictionaryServiceServer() throws IOException {
@@ -30,11 +30,12 @@ public class DictionaryServiceServer extends Thread {
     		serwerUs³ugiS³ownikowej.start();
     		
     		serwerUs³ugiS³ownikowej.dodajSerwer("en", new HashMap<String, String>() {{put("pies","dog"); put("kot","cat");}});
+    		serwerUs³ugiS³ownikowej.dodajSerwer("de", new HashMap<String, String>() {{put("pies","Hund"); put("kot","Katze");}});
     		
     		socket = new Socket("localhost", 1300);
     		oos = new ObjectOutputStream(socket.getOutputStream());
     		ois = new ObjectInputStream(socket.getInputStream());
-            oos.writeObject("Wiadomoœæ");
+            oos.writeObject("en,kot");
             oos.flush();
             
             String wiadomoœæ = (String) ois.readObject();
@@ -60,7 +61,12 @@ public class DictionaryServiceServer extends Thread {
     	}
     }
     
-    public void usuñKlienta(Client klient) {
+    public Integer pobierzPortSerweraS³ownikowego(String kod) {
+    	
+    	return pod³¹czoneSerweryS³ownikowe.get(kod);
+    }
+    
+    public void usuñKlienta(DictionaryServiceServerClient klient) {
     	
     	pod³¹czeniKlienci.remove(klient);
     	
@@ -77,7 +83,7 @@ public class DictionaryServiceServer extends Thread {
                 System.out.println("Serwer us³ug: oczekujê na po³¹czenie...");
                 Socket gniazdo = gniazdoSerwera.accept();	// wywo³ujemy metodê blokuj¹c¹ oczekuj¹ca na po³¹czenie ze strony klienta
                 System.out.println("Serwer us³ug: odebra³em po³¹czenie");
-                Client klient = new Client(gniazdo, this);
+                DictionaryServiceServerClient klient = new DictionaryServiceServerClient(gniazdo, this);
                 System.out.println("Serwer us³ug: utworzy³em klienta");
                 pod³¹czeniKlienci.add(klient);
                 klient.start();
