@@ -13,6 +13,11 @@ public class DictionaryServiceServer extends Thread {
     private final ArrayList<DictionaryServiceServerClient> pod³¹czeniKlienci = new ArrayList<>();	
     private final HashMap<String, Integer> pod³¹czoneSerweryS³ownikowe = new HashMap<>();
         
+    /**
+     * Konstruktor tworz¹cy serwer na porcie 1300
+     * 
+     * @throws IOException jeœli wyst¹pi¹ b³êdy I/O podczas otwierania gniazda
+     */
     public DictionaryServiceServer() throws IOException {
     	
         gniazdoSerwera = new ServerSocket(PORT);       
@@ -41,6 +46,9 @@ public class DictionaryServiceServer extends Thread {
             String wiadomoœæ = (String) ois.readObject();
             System.out.println("Main klient: odebra³em wiadomoœæ: " + wiadomoœæ);
     	} catch (IOException | ClassNotFoundException ex) {
+    		
+    		ex.printStackTrace();
+    	} catch (Exception ex) {
     		
     		ex.printStackTrace();
     	}

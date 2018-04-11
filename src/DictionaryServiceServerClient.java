@@ -43,26 +43,26 @@ public class DictionaryServiceServerClient extends Thread {
         if (port != null) {
 
         	try {
-            	System.out.println("Klient serwera us³ugi: jestem przed socket");
+
         		Socket gniazdo = new Socket("localhost", port);
-        		System.out.println("Klient serwera us³ugi: jestem po socket");
         		ObjectOutputStream oos = new ObjectOutputStream(gniazdo.getOutputStream());
-        		System.out.println("Klient serwera us³ugi: jestem po oos");
-        		//ObjectInputStream ois = new ObjectInputStream(gniazdo.getInputStream());
-        		//System.out.println("Klient serwera us³ugi: jestem po ois");
+        		ObjectInputStream ois = new ObjectInputStream(gniazdo.getInputStream());
+
         		System.out.println("Klient serwera us³ugi: pod³¹czy³em siê do serwera: '" + ¿¹danie + "' na porcie: " + port);
         		
                 oos.writeObject(informacje);
                 oos.flush();
+                
+                przetworzonaWiadomoœæ = (String) ois.readObject();
             } catch (IOException ex) {
             	
             	System.out.println("Klient serwera us³ugi: nie udalo pod³¹czyæ siê do serwera: '" + ¿¹danie + "' na porcie: " + port);
                 ex.printStackTrace();
-            }
+            } catch (ClassNotFoundException e) {
 
-            
-            //String wiadomoœæ = (String) ois.readObject();
-            //System.out.println("Main klient: odebra³em wiadomoœæ: " + wiadomoœæ);
+            	System.out.println("Klient serwera us³ugi: nie uda³o siê odebraæ przetworzonej wiadomoœci.");
+				e.printStackTrace();
+			}
         } else {
         	
         	przetworzonaWiadomoœæ = "Nie istnieje serwer dla danego kodu jêzyka: '" + ¿¹danie + "'";
