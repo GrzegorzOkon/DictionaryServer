@@ -4,7 +4,6 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class DictionaryServiceServer extends Thread {
     
@@ -37,15 +36,6 @@ public class DictionaryServiceServer extends Thread {
     		serwerUs³ugiS³ownikowej.dodajSerwer("de", new HashMap<String, String>() {{put("pies","Hund"); put("kot","Katze");}});
     		serwerUs³ugiS³ownikowej.dodajSerwer("en", new HashMap<String, String>() {{put("pies","dog"); put("kot","cat");}});
     		serwerUs³ugiS³ownikowej.dodajSerwer("fr", new HashMap<String, String>() {{put("pies","chien"); put("kot","chat");}});
-    		
-    		/*socket = new Socket("localhost", 1300);
-    		oos = new ObjectOutputStream(socket.getOutputStream());
-    		ois = new ObjectInputStream(socket.getInputStream());
-            oos.writeObject("en,kot");
-            oos.flush();
-            
-            String wiadomoœæ = (String) ois.readObject();
-            System.out.println("Main klient: odebra³em wiadomoœæ: " + wiadomoœæ);*/
     	} catch (IOException ex) {
     		
     		ex.printStackTrace();
@@ -90,7 +80,7 @@ public class DictionaryServiceServer extends Thread {
             try {
             	
                 System.out.println("Serwer us³ug: oczekujê na po³¹czenie...");
-                Socket gniazdo = gniazdoSerwera.accept();	// wywo³ujemy metodê blokuj¹c¹ oczekuj¹ca na po³¹czenie ze strony klienta
+                Socket gniazdo = gniazdoSerwera.accept();   // wywo³ujemy metodê blokuj¹c¹ oczekuj¹ca na po³¹czenie ze strony klienta
                 System.out.println("Serwer us³ug: odebra³em po³¹czenie");
                 DictionaryServiceServerClient klient = new DictionaryServiceServerClient(gniazdo, this);
                 System.out.println("Serwer us³ug: utworzy³em klienta");
@@ -99,7 +89,6 @@ public class DictionaryServiceServer extends Thread {
                 System.out.println("Serwer us³ug: liczba po³¹czonych klientów: " + pod³¹czeniKlienci.size());
             } catch (IOException ex) {
             	
-                //widok.dodajKomunikat("Nieudana próba nawi¹zania po³¹czenia z klientem");
             }
         }
     }    

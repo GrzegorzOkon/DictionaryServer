@@ -10,13 +10,14 @@ public class DictionaryServiceServerClient extends Thread {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
     
+    private int portKienta;
+    
     public DictionaryServiceServerClient(final Socket gniazdo, DictionaryServiceServer serwerUs³ugiS³ownikowej) {
     	
         this.serwerUs³ugiS³ownikowej = serwerUs³ugiS³ownikowej;
         
         try {
         	
-            oos = new ObjectOutputStream(gniazdo.getOutputStream());
             ois = new ObjectInputStream(gniazdo.getInputStream());
         } catch (IOException ex) {
         	
@@ -36,7 +37,16 @@ public class DictionaryServiceServerClient extends Thread {
         String przetworzonaWiadomoœæ = null;
 
         String ¿¹danie = wiadomoœæ.substring(0, wiadomoœæ.indexOf(","));	// sprawdzamy jakie ¿¹danie wys³a³ klient
-        String informacje = wiadomoœæ.substring(wiadomoœæ.indexOf(",") + 1);
+        String informacje = wiadomoœæ.substring(wiadomoœæ.indexOf(",") + 1, wiadomoœæ.lastIndexOf(","));
+        portKienta = Integer.valueOf(wiadomoœæ.substring(wiadomoœæ.lastIndexOf(",") + 1));
+        
+        try {
+        	
+        	oos = new ObjectOutputStream(new Socket("localhost", portKienta).getOutputStream());
+        } catch (Exception ex) {
+        	
+        	ex.printStackTrace();
+        }
         
         Integer port = serwerUs³ugiS³ownikowej.pobierzPortSerweraS³ownikowego(¿¹danie);
         
