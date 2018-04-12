@@ -34,18 +34,19 @@ public class DictionaryServiceServer extends Thread {
     		DictionaryServiceServer serwerUs³ugiS³ownikowej = new DictionaryServiceServer();
     		serwerUs³ugiS³ownikowej.start();
     		
-    		serwerUs³ugiS³ownikowej.dodajSerwer("en", new HashMap<String, String>() {{put("pies","dog"); put("kot","cat");}});
     		serwerUs³ugiS³ownikowej.dodajSerwer("de", new HashMap<String, String>() {{put("pies","Hund"); put("kot","Katze");}});
+    		serwerUs³ugiS³ownikowej.dodajSerwer("en", new HashMap<String, String>() {{put("pies","dog"); put("kot","cat");}});
+    		serwerUs³ugiS³ownikowej.dodajSerwer("fr", new HashMap<String, String>() {{put("pies","chien"); put("kot","chat");}});
     		
-    		socket = new Socket("localhost", 1300);
+    		/*socket = new Socket("localhost", 1300);
     		oos = new ObjectOutputStream(socket.getOutputStream());
     		ois = new ObjectInputStream(socket.getInputStream());
             oos.writeObject("en,kot");
             oos.flush();
             
             String wiadomoœæ = (String) ois.readObject();
-            System.out.println("Main klient: odebra³em wiadomoœæ: " + wiadomoœæ);
-    	} catch (IOException | ClassNotFoundException ex) {
+            System.out.println("Main klient: odebra³em wiadomoœæ: " + wiadomoœæ);*/
+    	} catch (IOException ex) {
     		
     		ex.printStackTrace();
     	} catch (Exception ex) {
