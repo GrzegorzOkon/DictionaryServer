@@ -1,11 +1,13 @@
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Klasa do obs³ugi po³¹czeñ przychodz¹cych do serwera. Ka¿dy klient obs³uguje pojedyncze po³¹czenie.
+ * 
+ */
 public class DictionaryServiceServerClient extends Thread {
-    
-    // referencja na obiekt umo¿liwiaj¹cy po³¹czenie z serwerem
+	// referencja na obiekt umo¿liwiaj¹cy po³¹czenie z serwerem
     private final DictionaryServiceServer serwerUs³ugiS³ownikowej;
-    
     // strumienie s³u¿¹ce do odbierania oraz wysy³ania danych
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
@@ -25,6 +27,13 @@ public class DictionaryServiceServerClient extends Thread {
         }
     }  
 
+    /**
+     * Odbiera wiadomoœæ przes³an¹ od klienta z ¿¹daniem t³umaczenia
+     * 
+     * @throw IOException przy b³êdzie odebrania wiadomoœci
+     * 
+     * @throw ClassNotFoundException przy b³êdzie rzutowania odebranej wiadomoœci do tekstu
+     */
     private String odbierzWiadomoœæ() throws IOException, ClassNotFoundException {
     	
         String wiadomoœæOdebrana = (String) ois.readObject();
@@ -32,23 +41,30 @@ public class DictionaryServiceServerClient extends Thread {
         return wiadomoœæOdebrana.trim();
     }
     
+    /**
+     * Przetwarza odebran¹ wiadomoœæ.
+     * 
+     * @param wiadomoœæ treœæ w formie np. "en,pies,5555"
+     * 
+     * @return przet³umaczone s³owo 
+     */
     private String przetwórzWiadomoœæ(String wiadomoœæ) {          
 
         String przetworzonaWiadomoœæ = null;
 
-        String ¿¹danie = wiadomoœæ.substring(0, wiadomoœæ.indexOf(","));	// sprawdzamy jakie ¿¹danie wys³a³ klient
-        String informacje = wiadomoœæ.substring(wiadomoœæ.indexOf(",") + 1, wiadomoœæ.lastIndexOf(","));
-        portKienta = Integer.valueOf(wiadomoœæ.substring(wiadomoœæ.lastIndexOf(",") + 1));
+        String ¿¹danie = wiadomoœæ.substring(0, wiadomoœæ.indexOf(","));	// sprawdzamy jakie ¿¹danie wys³a³ klient, np "en"
+        String informacje = wiadomoœæ.substring(wiadomoœæ.indexOf(",") + 1, wiadomoœæ.lastIndexOf(","));   //np. "pies"
+        portKienta = Integer.valueOf(wiadomoœæ.substring(wiadomoœæ.lastIndexOf(",") + 1));   //np. 50000
         
         try {
         	
-        	oos = new ObjectOutputStream(new Socket("localhost", portKienta).getOutputStream());
+        	oos = new ObjectOutputStream(new Socket("localhost", portKienta).getOutputStream());   //tworzy strumieñ do wys³ania zwrotnie przet³umaczonego s³owa
         } catch (Exception ex) {
         	
         	ex.printStackTrace();
         }
         
-        Integer port = serwerUs³ugiS³ownikowej.pobierzPortSerweraS³ownikowego(¿¹danie);
+        Integer port = serwerUs³ugiS³ownikowej.pobierzPortSerweraS³ownikowego(¿¹danie);   //pobiera numer portu potrzebnego serwera jêzyka
         
         if (port != null) {
 
@@ -83,6 +99,13 @@ public class DictionaryServiceServerClient extends Thread {
         return przetworzonaWiadomoœæ;
     }    
     
+    /**
+     * Wysy³a wiadomoœæ do klienta, który przys³a³ ¿¹danie t³umaczenia
+     * 
+     * @param wiadomoœæZwrotna treœæ w formie np. "cat"
+     * 
+     * @throw IOException przy nieudanej próbie wys³ania
+     */
     private void wyœlijWiadomoœæ(String wiadomoœæZwrotna) throws IOException {
     	
         oos.writeObject(wiadomoœæZwrotna);

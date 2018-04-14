@@ -26,6 +26,14 @@ public class DictionaryServerClient extends Thread {
 	    }
 	} 
 
+    /**
+     * Odbiera wiadomoœæ od klienta serwera us³ugi s³ownikowej.
+     * 
+     * @throws IOException przy b³edzie odbioru poprzez strumieñ
+     * @throws ClassNotFoundException przy b³edzie próby rzutowania do tekstu
+     * 
+     * @return treœæ wiadomoœci, np. "kot"
+     */
 	private String odbierzWiadomoœæ() throws IOException, ClassNotFoundException {
 	    	
 		String wiadomoœæOdebrana = (String) ois.readObject();
@@ -33,6 +41,13 @@ public class DictionaryServerClient extends Thread {
 	    return wiadomoœæOdebrana.trim();
 	}
 	    
+    /**
+     * Przetwarza wiadomoœæ 
+     * 
+     * @param wiadomoœæ treœæ wiadomoœci np. "kot"
+     * 
+     * @return zwraca odpowiedz, np. "cat" lub null gdy brak
+     */
     private String przetwórzWiadomoœæ(String wiadomoœæ) {          
 
         String przetworzonaWiadomoœæ = serwerS³ownikowy.pobierzObcojêzyczneS³owo(wiadomoœæ);
@@ -47,6 +62,13 @@ public class DictionaryServerClient extends Thread {
         return przetworzonaWiadomoœæ;
     } 
 	    
+    /**
+     * Wysy³a wiadomoœæ po przetworzeniu
+     * 
+     * @param wiadomoœæZwrotna np. "kot" lub null
+     * 
+     * @throws IOException przy nieudanej próbie
+     */
     private void wyœlijWiadomoœæ(String wiadomoœæZwrotna) throws IOException {
     	
         oos.writeObject(wiadomoœæZwrotna);
